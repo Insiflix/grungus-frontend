@@ -2,9 +2,9 @@ import { useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
 
-const topics = ["tailwind-css", "react"];
-const questions = ["jit-compilation", "purge-files", "dark-mode"];
-const random = ["variants", "plugins"];
+const topics = ["Grungus", "Insiflix", "Fortnite"];
+const questions = ["Who did 911", "Why do i love Fortnite", "Who was in Paris"];
+const random = ["Among-Us", "CS2"];
 
 const ChannelBar = () => {
   return (
