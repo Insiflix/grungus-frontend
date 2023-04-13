@@ -85,7 +85,8 @@
     bg-gray-300 dark:bg-gray-700
     m-0 
     h-full w-full 
-    overflow-hidden;
+    overflow-hidden
+    justify-end;
   }
 
   .content-list {

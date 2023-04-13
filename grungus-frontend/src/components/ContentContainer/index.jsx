@@ -6,7 +6,7 @@ const ContentContainer = () => {
   return (
     <div className="content-container">
       <TopNavigation />
-      <div className="content-list">
+      <div className="content-list justify-end min-h-[calc(100vh-4rem)]">
         <Post
           name="Ada"
           timestamp="one week ago"
@@ -70,13 +70,16 @@ const ContentContainer = () => {
 };
 
 const BottomBar = () => (
-  <div className="bottom-bar">
-    <PlusIcon />
-    <input
-      type="text"
-      placeholder="Enter message..."
-      className="bottom-bar-input"
-    />
+  <div>
+    <div className="bottom-bar">
+      <PlusIcon />
+      <input
+        type="text"
+        placeholder="Enter message..."
+        className="bottom-bar-input"
+      />
+    </div>
+    <span className="bg-white dark:bg-gray-700 w-full fixed block h-2 z-10 bottom-0"></span>
   </div>
 );
 
