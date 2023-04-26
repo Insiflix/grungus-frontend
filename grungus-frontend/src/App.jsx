@@ -1,15 +1,16 @@
-import Channelbar from "./components/ChannelBar";
-import ContentContainer from "./components/ContentContainer";
-import SideBar from "./components/SideBar";
+import Channelbar from "./components/ChannelBar/ChannelBar";
+import ContentContainer from "./components/ContentContainer/ContentContainer";
+import SideBar from "./components/SideBar/SideBar";
+// import { Socket } from "./tools/Socket";
 
 function App() {
-  return (
-    <div className="flex">
-      <SideBar />
-      <Channelbar />
-      <ContentContainer />
-    </div>
-  );
+	return (
+		<div className="flex">
+			<SideBar />
+			<Channelbar />
+			<ContentContainer />
+		</div>
+	);
 }
 
 export default App;
