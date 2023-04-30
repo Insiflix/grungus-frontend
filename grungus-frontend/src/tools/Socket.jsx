@@ -18,7 +18,7 @@ const SocketContext = createContext({
 	connect: _token => {},
 });
 
-export const Socket = ({ children }) => {
+export const SocketProvider = ({ children }) => {
 	const [socket, setSocket] = useState(io({ autoConnect: false }));
 	const [initialized, setInitialized] = useState(false);
 	const [connected, setConnected] = useState(undefined);
@@ -46,7 +46,7 @@ export const Socket = ({ children }) => {
 					const newSocket = io(SOCKET_URL, {
 						...config,
 						auth: {
-							token: "valid",
+							token: _token,
 						},
 					});
 					setInitialized(true);
@@ -60,3 +60,5 @@ export const Socket = ({ children }) => {
 		<SocketContext.Provider value={memo}>{children}</SocketContext.Provider>
 	);
 };
+
+export const useSocket = () => useContext(SocketProvider);
