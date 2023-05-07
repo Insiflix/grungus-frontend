@@ -12,16 +12,31 @@ const ContentContainer = () => {
 
 	useEffect(() => {
 		if (socketProvider.connected) {
-			alert("hi");
+			socketProvider.socket.on("channelJoin", e => {
+				console.log(e);
+			});
+			socketProvider.socket.on("message", message => {
+				console.log(messages);
+				setMessages(prevMessages => [
+					...prevMessages,
+					{
+						username: message.authorName,
+						text: message.content,
+						time: message.createdAt,
+					},
+				]);
+			});
+			return () => {
+				socketProvider.socket.off("channelJoin");
+			};
 		}
 	}, [socketProvider.socket, socketProvider.connected]);
 
 	function enterMessage(text) {
-		const updatedMessages = [
-			...messages,
-			{ username: "exampleUser", text, time: "new Date()" },
-		];
-		setMessages(updatedMessages);
+		socketProvider.socket.emit("message", {
+			channel: "af3vasdad",
+			content: text,
+		});
 	}
 
 	return (
