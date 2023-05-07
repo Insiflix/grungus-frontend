@@ -1,16 +1,6 @@
-import React, {
-	createContext,
-	useContext,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
-import { io } from "socket.io-client";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import io from "socket.io-client";
 import { SOCKET_URL } from "./api";
-
-const config = {
-	transports: ["websocket"],
-};
 
 const SocketContext = createContext({
 	socket: io({ autoConnect: false }),
@@ -18,47 +8,43 @@ const SocketContext = createContext({
 	connect: _token => {},
 });
 
-export const SocketProvider = ({ children }) => {
-	const [socket, setSocket] = useState(io({ autoConnect: false }));
-	const [initialized, setInitialized] = useState(false);
-	const [connected, setConnected] = useState(undefined);
-
-	useEffect(() => {
-		if (socket) {
-			socket.on("connect", () => {
-				console.log("Connected to " + SOCKET_URL + " as " + socket.id);
-				setConnected(true);
-			});
-			socket.on("disconnect", () => {
-				console.log("disconnected");
-				setConnected(false);
-			});
-		}
-	}, [socket]);
-
-	const memo = useMemo(() => {
-		return {
-			socket,
-			connected,
-			connect: _token => {
-				setSocket(prevSocket => {
-					// Use functional update to avoid circular dependency
-					const newSocket = io(SOCKET_URL, {
-						...config,
-						auth: {
-							token: _token,
-						},
-					});
-					setInitialized(true);
-					return newSocket;
-				});
-			},
-		};
-	}, [connected]);
-
-	return (
-		<SocketContext.Provider value={memo}>{children}</SocketContext.Provider>
-	);
+export const useSocket = () => {
+	return useContext(SocketContext);
 };
 
-export const useSocket = () => useContext(SocketProvider);
+export const SocketProvider = ({ children }) => {
+	const [socket, setSocket] = useState(null);
+	const [connected, setConnected] = useState(false);
+
+	useEffect(() => {
+		const socketInstance = io(SOCKET_URL);
+		setSocket(socketInstance);
+
+		return () => {
+			socketInstance.disconnect();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!socket) return;
+
+		socket.on("connect", () => {
+			setConnected(true);
+		});
+
+		socket.on("disconnect", () => {
+			setConnected(false);
+		});
+
+		return () => {
+			socket.off("connect");
+			socket.off("disconnect");
+		};
+	}, [socket]);
+
+	return (
+		<SocketContext.Provider value={{ socket, connected }}>
+			{children}
+		</SocketContext.Provider>
+	);
+};

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import TopNavigation from "../TopNavigation/TopNavigation";
 import { BsPlusCircleFill } from "react-icons/bs";
-import useSocket from "../../tools/Socket";
+import { useSocket } from "../../tools/Socket";
 
 const ContentContainer = () => {
 	const [messages, setMessages] = useState([
 		{ username: "hans", text: "hi", time: "just now" },
 	]);
-
-	const socketProvider = useSocket();
+	let socketProvider = useSocket();
+	console.log(socketProvider);
 
 	useEffect(() => {
 		if (socketProvider.connected) {
