@@ -3,9 +3,8 @@ import io from "socket.io-client";
 import { SOCKET_URL } from "./api";
 
 const SocketContext = createContext({
-	socket: io({ autoConnect: false }),
-	connected: undefined,
-	connect: _token => {},
+	socket: null,
+	connected: false,
 });
 
 export const useSocket = () => {
@@ -17,30 +16,26 @@ export const SocketProvider = ({ children }) => {
 	const [connected, setConnected] = useState(false);
 
 	useEffect(() => {
-		const socketInstance = io(SOCKET_URL);
+		const socketInstance = io(SOCKET_URL, { autoConnect: false });
+
+		socketInstance.on("connect", () => {
+			setConnected(true);
+		});
+
+		socketInstance.on("disconnect", () => {
+			setConnected(false);
+		});
+
+		socketInstance.on("connect_error", err => {
+			console.log(`Connection Error: ${err.message}`);
+		});
+
 		setSocket(socketInstance);
 
 		return () => {
 			socketInstance.disconnect();
 		};
 	}, []);
-
-	useEffect(() => {
-		if (!socket) return;
-
-		socket.on("connect", () => {
-			setConnected(true);
-		});
-
-		socket.on("disconnect", () => {
-			setConnected(false);
-		});
-
-		return () => {
-			socket.off("connect");
-			socket.off("disconnect");
-		};
-	}, [socket]);
 
 	return (
 		<SocketContext.Provider value={{ socket, connected }}>

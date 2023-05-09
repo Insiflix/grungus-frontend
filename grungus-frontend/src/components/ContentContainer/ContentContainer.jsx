@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, forwardRef } from "react";
 import TopNavigation from "../TopNavigation/TopNavigation";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { useSocket } from "../../tools/Socket";
+import Message from "./Message";
 
 const ContentContainer = () => {
 	const [messages, setMessages] = useState([
@@ -44,7 +45,7 @@ const ContentContainer = () => {
 			{/* TopNavigation component */}
 			<div className="content-list">
 				{messages.map((message, key) => (
-					<Post
+					<Message
 						key={key}
 						name={message.username}
 						text={message.text}
@@ -72,29 +73,6 @@ const BottomBar = ({ onSubmit }) => (
 		/>
 	</div>
 );
-
-const Post = ({ name, timestamp, text }) => {
-	const seed = Math.round(Math.random() * 100);
-	return (
-		<div className={"post"}>
-			<div className="avatar-wrapper">
-				<img
-					src={`https://avatars.dicebear.com/api/open-peeps/${seed}.svg`}
-					alt=""
-					className="avatar"
-				/>
-			</div>
-
-			<div className="post-content">
-				<p className="post-owner">
-					{name}
-					<small className="timestamp">{timestamp}</small>
-				</p>
-				<p className="post-text">{text}</p>
-			</div>
-		</div>
-	);
-};
 
 const PlusIcon = () => (
 	<BsPlusCircleFill
